@@ -1,0 +1,16 @@
+{
+    "name": "kof/utils",
+    "description": "utils",
+    "type": "library",
+    "require": {
+        "php": ">=5.5",
+        "ext-phalcon": "^3.0",
+        "kof/psr7": "^1.0",
+        "kof/phalcon": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kof\\Utils\\": "src/"
+        }
+    }
+}
