@@ -69,6 +69,25 @@ class Uploader
         );
         foreach ($iteriter as $key => $value) {
             if ($value instanceof UploadedFileInterface) {
+                switch ($value->getError()) {
+                    case \UPLOAD_ERR_INI_SIZE:
+                    case \UPLOAD_ERR_FORM_SIZE:
+                        throw new RuntimeException('上传文件超出限制大小');
+                        break;
+                    case \UPLOAD_ERR_PARTIAL:
+                        throw new RuntimeException('上传文件不完整');
+                    case \UPLOAD_ERR_NO_FILE:
+                        throw new RuntimeException('上传文件为空');
+                        break;
+                    case \UPLOAD_ERR_NO_TMP_DIR:
+                    case \UPLOAD_ERR_CANT_WRITE:
+                        throw new RuntimeException('上传目录不可写');
+                        break;
+                    case \UPLOAD_ERR_EXTENSION:
+                        throw new RuntimeException('上传文件后缀名错误');
+                        break;
+                }
+
                 if (isset($validationOptions['maxSize'])) {
                     $validation = new Validation();
                     $validationKey = $value->getClientFilename();
