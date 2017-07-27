@@ -35,13 +35,14 @@ class Uploader
     /**
      * @param string|array|UploadedFileInterface $file
      * @param array $validationOptions
+     * @param string|null $targetPath
      * @throws RuntimeException if the upload was not successful.
      * @throws InvalidArgumentException if the $path specified is invalid.
      * @throws RuntimeException on any error during the move operation, or on
      *     the second or subsequent call to the method.
      * @return array
      */
-    public function move($file, array $validationOptions = [])
+    public function move($file, array $validationOptions = [], $targetPath = null)
     {
         if ($file instanceof UploadedFileInterface) {
             $uploadedFiles = [$file];
@@ -128,31 +129,34 @@ class Uploader
             }
         }
 
-        $results = $this->_doMove($uploadedFiles);
+        $results = $this->_doMove($uploadedFiles, $targetPath);
 
         return $isMultiple ? $results : $results[0];
     }
 
     /**
      * @param array $uploadedFiles
+     * @param string|null $targetPath
      * @return bool|array
      */
-    protected function _doMove($uploadedFiles)
+    protected function _doMove($uploadedFiles, $targetPath)
     {
         $results = [];
         $adapter = $this->getOption('adapter', 'Local');
         foreach ($uploadedFiles as $key => $uploadedFile) {
             if ($uploadedFile instanceof UploadedFileInterface) {
-                $targetPath = uniqid() . '.' . self::getExtensionByMimetype($uploadedFile->getClientMediaType());
-                if ($adapter == 'Local') {
-                    $ttargetPath = $this->getOption('basePath', 'upload') . '/' . date("Y") . '/' . date("m") . '/' .
-                        date("d");
-                    if (!is_dir($ttargetPath)) {
-                        mkdir($ttargetPath, 0777, 1);
-                        chmod($ttargetPath, 0777);
+                if (!strlen($targetPath)) {
+                    $targetPath = uniqid() . '.' . self::getExtensionByMimetype($uploadedFile->getClientMediaType());
+                    if ($adapter == 'Local') {
+                        $ttargetPath = $this->getOption('basePath', 'upload') . '/' . date("Y") . '/' . date("m") . '/' .
+                            date("d");
+                        if (!is_dir($ttargetPath)) {
+                            mkdir($ttargetPath, 0777, 1);
+                            chmod($ttargetPath, 0777);
+                        }
+                        $targetPath = $ttargetPath . '/' . $targetPath;
+                        unset($ttargetPath);
                     }
-                    $targetPath = $ttargetPath . '/' . $targetPath;
-                    unset($ttargetPath);
                 }
                 $uploadedFile->moveTo($targetPath);
                 $results[$key] = [
@@ -164,7 +168,7 @@ class Uploader
                     'type' => $uploadedFile->getClientMediaType()
                 ];
             } else {
-                $results[$key] = $this->_doMove($uploadedFile);
+                $results[$key] = $this->_doMove($uploadedFile, $targetPath);
             }
         }
 
