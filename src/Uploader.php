@@ -146,7 +146,7 @@ class Uploader
         foreach ($uploadedFiles as $key => $uploadedFile) {
             if ($uploadedFile instanceof UploadedFileInterface) {
                 if (!strlen($targetPath)) {
-                    $targetPath = uniqid() . '.' . self::getExtensionByMimetype($uploadedFile->getClientMediaType());
+                    $mtargetPath = uniqid() . '.' . self::getExtensionByMimetype($uploadedFile->getClientMediaType());
                     if ($adapter == 'Local') {
                         $ttargetPath = $this->getOption('basePath', 'upload') . '/' . date("Y") . '/' . date("m") . '/' .
                             date("d");
@@ -154,15 +154,15 @@ class Uploader
                             mkdir($ttargetPath, 0777, 1);
                             chmod($ttargetPath, 0777);
                         }
-                        $targetPath = $ttargetPath . '/' . $targetPath;
+                        $mtargetPath = $ttargetPath . '/' . $mtargetPath;
                         unset($ttargetPath);
                     }
                 }
-                $uploadedFile->moveTo($targetPath);
+                $uploadedFile->moveTo($mtargetPath);
                 $results[$key] = [
                     'adapter' => $this->getOption('adapter'),
                     'domain' => $this->getOption('domain'),
-                    'path' => $targetPath,
+                    'path' => $mtargetPath,
                     'name' => $uploadedFile->getClientFilename(),
                     'size' => $uploadedFile->getSize(),
                     'type' => $uploadedFile->getClientMediaType()
