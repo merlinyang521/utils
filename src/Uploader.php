@@ -280,7 +280,7 @@ class Uploader
             'application/x-dvi' => 'dvi', 'application/vnd.ms-fontobject' => 'eot', 'application/epub+zip' => 'epub',
             'text/x-setext' => 'etx', 'audio/flac' => 'flac', 'video/x-flv' => 'flv', 'image/gif' => 'gif',
             'application/gzip' => 'gz', 'text/html' => 'html', 'image/x-icon' => 'ico', 'text/calendar' => 'ics',
-            'application/x-iso9660-image' => 'iso', 'application/java-archive' => 'jar', 'image/jpeg' => 'jpg',
+            'application/x-iso9660-image' => 'iso', 'application/java-archive' => 'jar', 'image/jpg' => 'jpg', 'image/jpeg' => 'jpg',
             'text/javascript' => 'js', 'application/json' => 'json', 'application/x-latex' => 'latex',
             'audio/mp4' => 'mp4a', 'video/mp4' => 'mp4', 'audio/midi' => 'midi', 'video/quicktime' => 'qt',
             'audio/mpeg' => 'mp3', 'video/mpeg' => 'mpg', 'audio/ogg' => 'ogg', 'video/ogg' => 'ogv',
